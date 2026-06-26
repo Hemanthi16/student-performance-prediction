@@ -1,14 +1,26 @@
 import streamlit as st
-import joblib
 import numpy as np
-
-model = joblib.load("model.pkl")
+import pandas as pd
+from sklearn.linear_model import LinearRegression
 
 st.title("🎓 Student Performance Predictor")
-st.write("Predict marks based on study hours using Machine Learning")
 
-hours = st.number_input("Enter Study Hours", min_value=0.0, max_value=24.0)
+# Simple dataset
+data = {
+    "Hours": [1,2,3,4,5,6,7,8],
+    "Marks": [10,20,30,40,50,60,70,80]
+}
 
-if st.button("Predict Marks"):
-    prediction = model.predict(np.array([[hours]]))
-    st.success(f"Predicted Marks: {prediction[0]:.2f}")
+df = pd.DataFrame(data)
+
+X = df[["Hours"]]
+y = df["Marks"]
+
+model = LinearRegression()
+model.fit(X, y)
+
+hours = st.number_input("Enter Study Hours")
+
+if st.button("Predict"):
+    pred = model.predict(np.array([[hours]]))
+    st.success(f"Predicted Marks: {pred[0]:.2f}")
